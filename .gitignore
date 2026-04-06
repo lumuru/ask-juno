@@ -39,3 +39,7 @@ supabase/logs/
 .env.local
 .env.staging
 .env.production
+.superpowers/
+
+# Worktrees
+.worktrees/
