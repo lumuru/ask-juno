@@ -14,6 +14,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "@/lib/auth-provider";
+import { useAppStore } from "@/lib/store";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,6 +29,7 @@ const queryClient = new QueryClient({
 
 function AuthGate() {
   const { session, isLoading } = useAuth();
+  const hasCompletedOnboarding = useAppStore((s) => s.hasCompletedOnboarding);
   const segments = useSegments();
   const router = useRouter();
 
@@ -35,13 +37,20 @@ function AuthGate() {
     if (isLoading) return;
 
     const inAuthGroup = segments[0] === "(auth)";
+    const inOnboarding = segments[0] === "(onboarding)";
 
     if (!session && !inAuthGroup) {
       router.replace("/(auth)/sign-in");
     } else if (session && inAuthGroup) {
-      router.replace("/(tabs)");
+      if (!hasCompletedOnboarding) {
+        router.replace("/(onboarding)");
+      } else {
+        router.replace("/(tabs)");
+      }
+    } else if (session && !hasCompletedOnboarding && !inOnboarding) {
+      router.replace("/(onboarding)");
     }
-  }, [session, isLoading, segments]);
+  }, [session, isLoading, hasCompletedOnboarding, segments]);
 
   return (
     <Stack
