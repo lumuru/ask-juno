@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { supabase } from "./supabase";
+import { initRevenueCat } from "./revenuecat";
 import type { Session, User } from "@supabase/supabase-js";
 
 interface AuthState {
@@ -27,6 +28,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (session?.user?.id) {
+        initRevenueCat(session.user.id);
+      }
       setIsLoading(false);
     });
 
@@ -34,6 +38,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session?.user?.id) {
+        initRevenueCat(session.user.id);
+      }
     });
 
     return () => subscription.unsubscribe();
