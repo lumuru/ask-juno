@@ -32,3 +32,10 @@ android/build/
 # Supabase (future)
 supabase/.branches/
 supabase/.temp/
+supabase/logs/
+
+# Local secrets
+.env
+.env.local
+.env.staging
+.env.production
