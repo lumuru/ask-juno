@@ -23,7 +23,10 @@
         "backgroundColor": "#0D0D0D"
       },
       "package": "com.juno.app",
-      "permissions": ["android.permission.CAMERA", "android.permission.READ_MEDIA_IMAGES"]
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -34,7 +37,8 @@
           "photosPermission": "Juno needs access to your photos to scan clothing items.",
           "cameraPermission": "Juno can use your camera to photograph clothing items."
         }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }
