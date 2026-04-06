@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   Pressable,
-  FlatList,
   StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -103,16 +102,18 @@ export default function ReviewScreen() {
             return (
               <View key={key} style={styles.pairingSection}>
                 <Text style={styles.pairingSectionHeader}>{label}</Text>
-                <FlatList
+                <ScrollView
                   horizontal
-                  data={pairingItems}
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.pairingScroll}
-                  keyExtractor={(_, i) => String(i)}
-                  renderItem={({ item }) => (
-                    <PairingCard title={item.replace(/^[-—•]\s*/, "")} />
-                  )}
-                />
+                >
+                  {pairingItems.map((item, i) => (
+                    <PairingCard
+                      key={i}
+                      title={item.replace(/^[-—•]\s*/, "")}
+                    />
+                  ))}
+                </ScrollView>
               </View>
             );
           }

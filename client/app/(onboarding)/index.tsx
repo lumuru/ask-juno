@@ -55,10 +55,17 @@ export default function OnboardingScreen() {
     },
   ).current;
 
+  const heightMap: Record<string, number> = {
+    "< 165cm": 160,
+    "165–175cm": 170,
+    "175–185cm": 180,
+    "185cm +": 190,
+  };
+
   const finish = async () => {
     if (heightCm || build || gender) {
       await updateProfile.mutateAsync({
-        height_cm: heightCm ? parseInt(heightCm, 10) : null,
+        height_cm: heightCm ? heightMap[heightCm] ?? null : null,
         body_shape: build,
         gender_presentation: gender,
       });

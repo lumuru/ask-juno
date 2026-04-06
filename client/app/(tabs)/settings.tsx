@@ -17,6 +17,17 @@ import { PillSelector } from "@/components/PillSelector";
 import { Divider } from "@/components/Divider";
 import { supabase } from "@/lib/supabase";
 
+const HEIGHT_MAP: Record<string, number> = {
+  "< 165cm": 160,
+  "165–175cm": 170,
+  "175–185cm": 180,
+  "185cm +": 190,
+};
+
+const REVERSE_HEIGHT_MAP: Record<number, string> = Object.fromEntries(
+  Object.entries(HEIGHT_MAP).map(([label, cm]) => [cm, label]),
+);
+
 export default function SettingsScreen() {
   const { signOut } = useAuth();
   const { data: profile } = useProfile();
@@ -73,15 +84,11 @@ export default function SettingsScreen() {
           <PillSelector
             label="Height"
             options={["< 165cm", "165–175cm", "175–185cm", "185cm +"]}
-            selected={null}
+            selected={
+              profile?.height_cm ? REVERSE_HEIGHT_MAP[profile.height_cm] ?? null : null
+            }
             onSelect={(val) => {
-              const heightMap: Record<string, number> = {
-                "< 165cm": 160,
-                "165–175cm": 170,
-                "175–185cm": 180,
-                "185cm +": 190,
-              };
-              updateProfile.mutate({ height_cm: heightMap[val] ?? null });
+              updateProfile.mutate({ height_cm: HEIGHT_MAP[val] ?? null });
             }}
           />
           <PillSelector
