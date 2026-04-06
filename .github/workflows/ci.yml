@@ -31,3 +31,33 @@ jobs:
         if: always()
         run: supabase stop --no-backup
         working-directory: .
+
+  edge-functions:
+    name: Edge Function Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Lint shared modules
+        working-directory: supabase/functions
+        run: deno lint _shared/
+
+      - name: Type-check all functions
+        working-directory: supabase/functions
+        run: |
+          deno check _shared/*.ts
+          deno check health/index.ts
+          deno check review/index.ts
+          deno check unlock-check/index.ts
+          deno check report/index.ts
+          deno check webhook-revenuecat/index.ts
+          deno check delete-account/index.ts
+          deno check export-account/index.ts
+
+      - name: Run unit tests
+        working-directory: supabase/functions
+        run: deno test _shared/ --allow-none
